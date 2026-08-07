@@ -122,15 +122,15 @@ interface TMDBProvider {
   logo_path: string;
 }
 
+interface TMDBCountryProviders {
+  link: string;
+  flatrate?: TMDBProvider[];
+  rent?: TMDBProvider[];
+  buy?: TMDBProvider[];
+}
+
 interface TMDBWatchProviderResponse {
-  results: {
-    IN?: {
-      link: string;
-      flatrate?: TMDBProvider[];
-      rent?: TMDBProvider[];
-      buy?: TMDBProvider[];
-    };
-  };
+  results: Record<string, TMDBCountryProviders>;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -140,32 +140,31 @@ interface TMDBWatchProviderResponse {
 export async function getMovieDetails(
   movieId: number
 ): Promise<MovieDetails> {
-  const [
-    movieResult,
-    creditsResult,
-    videosResult,
-    similarResult,
-    providersResult,
-  ] = await Promise.allSettled([
-    tmdbFetch<TMDBMovieResponse>(`/movie/${movieId}`),
+const [
+  movieResult,
+  creditsResult,
+  videosResult,
+  similarResult,
+  providersResult,
+] = await Promise.allSettled([
+  tmdbFetch<TMDBMovieResponse>(`/movie/${movieId}`),
 
-    tmdbFetch<TMDBCreditsResponse>(
-      `/movie/${movieId}/credits`
-    ),
+  tmdbFetch<TMDBCreditsResponse>(
+    `/movie/${movieId}/credits`
+  ),
 
-    tmdbFetch<TMDBVideosResponse>(
-      `/movie/${movieId}/videos`
-    ),
+  tmdbFetch<TMDBVideosResponse>(
+    `/movie/${movieId}/videos`
+  ),
 
-    tmdbFetch<TMDBSimilarResponse>(
-      `/movie/${movieId}/similar`
-    ),
+  tmdbFetch<TMDBSimilarResponse>(
+    `/movie/${movieId}/similar`
+  ),
 
-    tmdbFetch<TMDBWatchProviderResponse>(
-      `/movie/${movieId}/watch/providers`
-    ),
-  ]);
-
+  tmdbFetch<TMDBWatchProviderResponse>(
+    `/movie/${movieId}/watch/providers`
+  ),
+]);
   if (movieResult.status === "rejected") {
     throw movieResult.reason;
   }
@@ -187,21 +186,22 @@ export async function getMovieDetails(
       ? similarResult.value
       : { results: [] };
 
- const providerData =
+const providerResults: Record<string, TMDBCountryProviders> =
   providersResult.status === "fulfilled"
-    ? (
-        providersResult.value.results.IN ??
-        providersResult.value.results.US ??
-        providersResult.value.results.GB
-      )
-    : undefined;
+    ? providersResult.value.results
+    : {};
+
+const providerData =
+  providerResults["IN"] ??
+  providerResults["US"] ??
+  providerResults["GB"] ??
+  Object.values(providerResults).at(0);
 
 // Always have a watch page
 const watchUrl =
   providerData?.link ??
   `https://www.themoviedb.org/movie/${movieId}/watch`;
 
-// Merge subscription + rent + buy
 const allProviders = [
   ...(providerData?.flatrate ?? []),
   ...(providerData?.rent ?? []),
