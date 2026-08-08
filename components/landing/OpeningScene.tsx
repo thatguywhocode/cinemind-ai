@@ -1,10 +1,14 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-
-import Atmosphere from "@/components/scene/Atmosphere";
-import Projector from "@/components/scene/Projector";
 import dynamic from "next/dynamic";
+
+import Projector from "@/components/scene/Projector";
+import ThinkingLoader from "@/components/ai/ThinkingLoader";
+import RecommendationResults from "@/components/ai/RecommendationResults";
+import HeroContent from "@/components/landing/HeroContent";
+
+import { useRecommendation } from "@/hooks/useRecommendation";
 
 const DustParticles = dynamic(
   () => import("@/components/scene/DustParticles"),
@@ -12,12 +16,6 @@ const DustParticles = dynamic(
     ssr: false,
   }
 );
-import ThinkingLoader from "@/components/ai/ThinkingLoader";
-import RecommendationResults from "@/components/ai/RecommendationResults";
-
-import HeroContent from "@/components/landing/HeroContent";
-
-import { useRecommendation } from "@/hooks/useRecommendation";
 
 export default function OpeningScene() {
   const {
@@ -28,26 +26,69 @@ export default function OpeningScene() {
   } = useRecommendation();
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-[#050608]">
-      <Atmosphere />
+    <section className="relative w-full overflow-hidden bg-[#090A0D]">
+      <div
+        className="
+          relative
+          mx-auto
+          flex
+          min-h-screen
+          w-full
+          max-w-[1700px]
+          flex-col
+          lg:flex-row
+        "
+      >
+        {/* ================================================================ */}
+        {/* PROJECTOR / LEFT SIDE                                           */}
+        {/* ================================================================ */}
 
-      <div className="relative mx-auto flex min-h-screen max-w-[1700px]">
-
-        {/* LEFT */}
-
-        <div className="relative w-[35%]">
+        <div
+          className="
+            relative
+            h-[280px]
+            w-full
+            shrink-0
+            sm:h-[340px]
+            lg:h-auto
+            lg:min-h-screen
+            lg:w-[35%]
+          "
+        >
           <Projector />
+
           <DustParticles />
         </div>
 
-        {/* RIGHT */}
+        {/* ================================================================ */}
+        {/* CONTENT / RIGHT SIDE                                             */}
+        {/* ================================================================ */}
 
-        <div className="relative flex flex-1 items-center justify-center">
-
+        <div
+          className="
+            relative
+            flex
+            min-h-[520px]
+            w-full
+            flex-1
+            items-center
+            justify-center
+            px-4
+            py-12
+            sm:px-6
+            sm:py-16
+            lg:min-h-screen
+            lg:px-8
+            lg:py-20
+            xl:px-12
+          "
+        >
           <AnimatePresence mode="wait">
+            {/* ============================================================ */}
+            {/* LOADING                                                      */}
+            {/* ============================================================ */}
 
             {loading ? (
-
               <motion.div
                 key="loading"
                 initial={{
@@ -65,12 +106,19 @@ export default function OpeningScene() {
                 transition={{
                   duration: 0.45,
                 }}
-                className="flex w-full justify-center"
+                className="
+                  flex
+                  w-full
+                  max-w-2xl
+                  justify-center
+                "
               >
                 <ThinkingLoader />
               </motion.div>
-
             ) : result ? (
+              /* ============================================================ */
+              /* RECOMMENDATIONS                                              */
+              /* ============================================================ */
 
               <motion.div
                 key="result"
@@ -88,15 +136,17 @@ export default function OpeningScene() {
                 transition={{
                   duration: 0.55,
                 }}
-                className="w-full"
+                className="w-full max-w-7xl"
               >
                 <RecommendationResults
                   result={result}
                   onReset={clear}
                 />
               </motion.div>
-
             ) : (
+              /* ============================================================ */
+              /* HERO                                                         */
+              /* ============================================================ */
 
               <motion.div
                 key="hero"
@@ -115,19 +165,19 @@ export default function OpeningScene() {
                 transition={{
                   duration: 0.55,
                 }}
+                className="
+                  w-full
+                  max-w-3xl
+                "
               >
                 <HeroContent
                   onSearch={search}
                   loading={loading}
                 />
               </motion.div>
-
             )}
-
           </AnimatePresence>
-
         </div>
-
       </div>
     </section>
   );

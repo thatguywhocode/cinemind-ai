@@ -20,14 +20,26 @@ const particles = [
 export default function DustParticles() {
   return (
     <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
+      {/* ================================================================ */}
+      {/* DESKTOP PARTICLE BEAM                                            */}
+      {/* ================================================================ */}
+
       <div
-        className="absolute"
+        className="
+          absolute
+          left-[180px]
+          top-[240px]
+          hidden
+          h-[240px]
+          w-[750px]
+          lg:block
+          xl:left-[270px]
+          xl:top-[300px]
+          xl:h-[240px]
+          xl:w-[900px]
+        "
         style={{
-          left: 270,
-          top: 300,
-          width: 900,
-          height: 240,
-          clipPath: "polygon(0 50%,100% 0,100% 100%)",
+          clipPath: "polygon(0 50%, 100% 0, 100% 100%)",
         }}
       >
         {particles.map((particle) => (
@@ -57,6 +69,62 @@ export default function DustParticles() {
             }}
           />
         ))}
+      </div>
+
+      {/* ================================================================ */}
+      {/* MOBILE PARTICLES                                                 */}
+      {/* ================================================================ */}
+
+      <div
+        className="
+          absolute
+          left-1/2
+          top-[80px]
+          block
+          h-[180px]
+          w-[320px]
+          -translate-x-1/2
+          sm:top-[100px]
+          sm:h-[200px]
+          sm:w-[420px]
+          lg:hidden
+        "
+        style={{
+          clipPath: "polygon(0 50%, 100% 0, 100% 100%)",
+        }}
+      >
+        {particles.slice(0, 8).map((particle, index) => {
+          const mobileX = (particle.x / 820) * 320;
+          const mobileY = (particle.y / 160) * 180;
+
+          return (
+            <motion.span
+              key={particle.id}
+              className="absolute rounded-full bg-[#FFD66B]"
+              style={{
+                width: Math.max(1.5, particle.size * 0.8),
+                height: Math.max(1.5, particle.size * 0.8),
+                filter: "blur(1px)",
+              }}
+              initial={{
+                x: mobileX,
+                y: mobileY,
+                opacity: particle.opacity,
+              }}
+              animate={{
+                x: mobileX + 30,
+                y: mobileY + 12,
+                opacity: [0, particle.opacity, 0],
+              }}
+              transition={{
+                duration: particle.duration,
+                delay: particle.delay + index * 0.05,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+            />
+          );
+        })}
       </div>
     </div>
   );

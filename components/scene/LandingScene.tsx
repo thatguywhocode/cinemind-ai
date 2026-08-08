@@ -6,17 +6,22 @@ import TrendingMovies from "@/components/landing/TrendingMovies";
 
 export default function LandingScene() {
   return (
-    <main className="bg-[#050608] text-white overflow-x-hidden">
-
+    <div className="min-h-screen w-full overflow-x-hidden bg-[#090A0D] text-white">
       {/* Fixed Navbar */}
       <Navbar />
 
-      {/* Hero */}
-      <OpeningScene />
+      {/* Main Content */}
+      <main className="w-full">
+        {/* Hero Section */}
+        <section className="w-full">
+          <OpeningScene />
+        </section>
 
-      {/* Next Section */}
-      <TrendingMovies />
-
-    </main>
+        {/* Trending Section */}
+        <section className="w-full">
+          <TrendingMovies />
+        </section>
+      </main>
+    </div>
   );
 }

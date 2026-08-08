@@ -15,79 +15,118 @@ export default function MoodSearch({
   const [prompt, setPrompt] = useState("");
 
   function handleSearch() {
-    if (!prompt.trim()) return;
+    if (!prompt.trim() || loading) return;
 
-    onSearch(prompt);
+    onSearch(prompt.trim());
   }
 
   return (
     <div
       className="
-      flex
-      overflow-hidden
-      rounded-full
-      border
-      border-yellow-500/20
-      bg-[#111214]/90
-      backdrop-blur-xl
-      shadow-[0_0_25px_rgba(232,180,76,.08)]
-    "
-    >
-      {/* Icon */}
+        flex
+        w-full
+        flex-col
+        overflow-hidden
+        rounded-2xl
+        border
+        border-white/10
+        bg-[#101114]/90
+        shadow-[0_0_40px_rgba(0,0,0,.35)]
+        backdrop-blur-xl
 
-      <div className="flex items-center pl-8 pr-5">
-        <Sparkles
-          size={22}
-          className="text-[#E8B44C]"
+        sm:flex-row
+        sm:rounded-full
+      "
+    >
+      {/* ================================================================ */}
+      {/* INPUT ROW                                                        */}
+      {/* ================================================================ */}
+
+      <div className="flex min-w-0 flex-1 items-center">
+        {/* Icon */}
+
+        <div
+          className="
+            flex
+            shrink-0
+            items-center
+            pl-5
+            pr-3
+            sm:pl-6
+            sm:pr-3
+          "
+        >
+          <Sparkles
+            size={20}
+            className="text-[#E8B44C] sm:h-[22px] sm:w-[22px]"
+          />
+        </div>
+
+        {/* Input */}
+
+        <input
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleSearch();
+            }
+          }}
+          disabled={loading}
+          placeholder="Describe your mood..."
+          className="
+            h-16
+            min-w-0
+            flex-1
+            bg-transparent
+            pr-4
+            text-base
+            text-white
+            placeholder:text-zinc-500
+            outline-none
+            disabled:cursor-not-allowed
+            sm:h-20
+            sm:text-lg
+          "
         />
       </div>
 
-      {/* Input */}
-
-      <input
-        value={prompt}
-        onChange={(e) => setPrompt(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            handleSearch();
-          }
-        }}
-        placeholder="Describe your mood..."
-        className="
-        h-20
-        flex-1
-        bg-transparent
-        text-lg
-        text-white
-        placeholder:text-zinc-500
-        outline-none
-      "
-      />
-
-      {/* Button */}
+      {/* ================================================================ */}
+      {/* SEARCH BUTTON                                                    */}
+      {/* ================================================================ */}
 
       <button
+        type="button"
         onClick={handleSearch}
-        disabled={loading}
+        disabled={loading || !prompt.trim()}
         className="
-        flex
-        w-44
-        items-center
-        justify-center
-        gap-3
-        bg-[#E8B44C]
-        font-semibold
-        text-black
-        transition-all
-        duration-300
-        hover:bg-[#FFD86B]
-        disabled:cursor-not-allowed
-        disabled:opacity-60
-      "
+          flex
+          h-14
+          w-full
+          shrink-0
+          items-center
+          justify-center
+          gap-2
+          bg-[#E8B44C]
+          px-6
+          font-semibold
+          text-black
+          transition-all
+          duration-300
+          hover:bg-[#FFD86B]
+          disabled:cursor-not-allowed
+          disabled:opacity-60
+          sm:h-20
+          sm:w-40
+          sm:gap-3
+          sm:px-5
+        "
       >
-        <Search size={20} />
+        <Search size={19} />
 
-        {loading ? "Thinking..." : "Search"}
+        <span>
+          {loading ? "Thinking..." : "Search"}
+        </span>
       </button>
     </div>
   );
