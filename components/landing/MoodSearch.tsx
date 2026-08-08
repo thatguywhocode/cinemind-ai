@@ -27,7 +27,7 @@ export default function MoodSearch({
         w-full
         flex-col
         overflow-hidden
-        rounded-2xl
+        rounded-xl
         border
         border-white/10
         bg-[#101114]/90
@@ -38,9 +38,9 @@ export default function MoodSearch({
         sm:rounded-full
       "
     >
-      {/* ================================================================ */}
-      {/* INPUT ROW                                                        */}
-      {/* ================================================================ */}
+      {/* ============================================================
+          INPUT ROW
+      ============================================================ */}
 
       <div className="flex min-w-0 flex-1 items-center">
         {/* Icon */}
@@ -50,15 +50,21 @@ export default function MoodSearch({
             flex
             shrink-0
             items-center
-            pl-5
-            pr-3
+            pl-4
+            pr-2
+
             sm:pl-6
             sm:pr-3
           "
         >
           <Sparkles
-            size={20}
-            className="text-[#E8B44C] sm:h-[22px] sm:w-[22px]"
+            size={19}
+            className="
+              text-[#E8B44C]
+
+              sm:h-[22px]
+              sm:w-[22px]
+            "
           />
         </div>
 
@@ -75,7 +81,7 @@ export default function MoodSearch({
           disabled={loading}
           placeholder="Describe your mood..."
           className="
-            h-16
+            h-14
             min-w-0
             flex-1
             bg-transparent
@@ -85,15 +91,16 @@ export default function MoodSearch({
             placeholder:text-zinc-500
             outline-none
             disabled:cursor-not-allowed
-            sm:h-20
+
+            sm:h-16
             sm:text-lg
           "
         />
       </div>
 
-      {/* ================================================================ */}
-      {/* SEARCH BUTTON                                                    */}
-      {/* ================================================================ */}
+      {/* ============================================================
+          SEARCH BUTTON
+      ============================================================ */}
 
       <button
         type="button"
@@ -101,22 +108,25 @@ export default function MoodSearch({
         disabled={loading || !prompt.trim()}
         className="
           flex
-          h-14
+          h-10
           w-full
           shrink-0
           items-center
           justify-center
           gap-2
           bg-[#E8B44C]
-          px-6
+          px-5
           font-semibold
           text-black
           transition-all
           duration-300
+
           hover:bg-[#FFD86B]
+
           disabled:cursor-not-allowed
           disabled:opacity-60
-          sm:h-20
+
+          sm:h-16
           sm:w-40
           sm:gap-3
           sm:px-5

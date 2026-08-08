@@ -1,21 +1,14 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import dynamic from "next/dynamic";
 
+import Atmosphere from "@/components/scene/Atmosphere";
 import Projector from "@/components/scene/Projector";
 import ThinkingLoader from "@/components/ai/ThinkingLoader";
 import RecommendationResults from "@/components/ai/RecommendationResults";
 import HeroContent from "@/components/landing/HeroContent";
 
 import { useRecommendation } from "@/hooks/useRecommendation";
-
-const DustParticles = dynamic(
-  () => import("@/components/scene/DustParticles"),
-  {
-    ssr: false,
-  }
-);
 
 export default function OpeningScene() {
   const {
@@ -26,159 +19,84 @@ export default function OpeningScene() {
   } = useRecommendation();
 
   return (
-    <section className="relative w-full overflow-hidden bg-[#090A0D]">
+    <>
+      <Atmosphere />
+
+      {/* PROJECTOR */}
+      <div className="pointer-events-none absolute inset-0 z-20">
+        <Projector visible={!loading && !result} />
+      </div>
+
+      {/* HERO CONTENT */}
       <div
         className="
           relative
-          mx-auto
+          z-30
           flex
-          min-h-screen
+          min-h-[calc(100svh-72px)]
           w-full
-          max-w-[1700px]
-          flex-col
-          lg:flex-row
+          items-center
+          justify-center
+          px-4
+          py-12
+          sm:px-6
+          sm:py-16
+          md:px-10
+          md:py-20
+          lg:px-14
+          xl:px-20
         "
       >
-        {/* ================================================================ */}
-        {/* PROJECTOR / LEFT SIDE                                           */}
-        {/* ================================================================ */}
-
-        <div
-          className="
-            relative
-            h-[280px]
-            w-full
-            shrink-0
-            sm:h-[340px]
-            lg:h-auto
-            lg:min-h-screen
-            lg:w-[35%]
-          "
-        >
-          <Projector />
-
-          <DustParticles />
-        </div>
-
-        {/* ================================================================ */}
-        {/* CONTENT / RIGHT SIDE                                             */}
-        {/* ================================================================ */}
-
-        <div
-          className="
-            relative
-            flex
-            min-h-[520px]
-            w-full
-            flex-1
-            items-center
-            justify-center
-            px-4
-            py-12
-            sm:px-6
-            sm:py-16
-            lg:min-h-screen
-            lg:px-8
-            lg:py-20
-            xl:px-12
-          "
-        >
-          <AnimatePresence mode="wait">
-            {/* ============================================================ */}
-            {/* LOADING                                                      */}
-            {/* ============================================================ */}
-
-            {loading ? (
-              <motion.div
-                key="loading"
-                initial={{
-                  opacity: 0,
-                  scale: 0.96,
-                }}
-                animate={{
-                  opacity: 1,
-                  scale: 1,
-                }}
-                exit={{
-                  opacity: 0,
-                  scale: 0.96,
-                }}
-                transition={{
-                  duration: 0.45,
-                }}
-                className="
-                  flex
-                  w-full
-                  max-w-2xl
-                  justify-center
-                "
-              >
-                <ThinkingLoader />
-              </motion.div>
-            ) : result ? (
-              /* ============================================================ */
-              /* RECOMMENDATIONS                                              */
-              /* ============================================================ */
-
-              <motion.div
-                key="result"
-                initial={{
-                  opacity: 0,
-                  y: 60,
-                }}
-                animate={{
-                  opacity: 1,
-                  y: 0,
-                }}
-                exit={{
-                  opacity: 0,
-                }}
-                transition={{
-                  duration: 0.55,
-                }}
-                className="w-full max-w-7xl"
-              >
-                <RecommendationResults
-                  result={result}
-                  onReset={clear}
-                />
-              </motion.div>
-            ) : (
-              /* ============================================================ */
-              /* HERO                                                         */
-              /* ============================================================ */
-
-              <motion.div
-                key="hero"
-                initial={{
-                  opacity: 0,
-                  x: 80,
-                }}
-                animate={{
-                  opacity: 1,
-                  x: 0,
-                }}
-                exit={{
-                  opacity: 0,
-                  x: -60,
-                }}
-                transition={{
-                  duration: 0.55,
-                }}
-                className="
-                  w-full
-                  max-w-3xl
-                "
-              >
-                <HeroContent
-                  onSearch={search}
-                  loading={loading}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+        <AnimatePresence mode="wait">
+          {loading ? (
+            <motion.div
+              key="loading"
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.96 }}
+              transition={{ duration: 0.45 }}
+              className="flex w-full items-center justify-center"
+            >
+              <ThinkingLoader />
+            </motion.div>
+          ) : result ? (
+            <motion.div
+              key="result"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{
+                duration: 0.55,
+                ease: "easeOut",
+              }}
+              className="w-full max-w-[1400px]"
+            >
+              <RecommendationResults
+                result={result}
+                onReset={clear}
+              />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="hero"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -25 }}
+              transition={{
+                delay: 1.2,
+                duration: 0.8,
+                ease: "easeOut",
+              }}
+              className="w-full min-w-0 max-w-[1400px]"
+            >
+              <HeroContent
+                onSearch={search}
+                loading={loading}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
-    </section>
+    </>
   );
 }

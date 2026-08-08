@@ -13,9 +13,26 @@ export async function getRecommendations(
     }),
   });
 
+  const responseText = await res.text();
+
+  console.log("========== RECOMMENDATION API ==========");
+  console.log("URL:", "/api/recommend");
+  console.log("STATUS:", res.status);
+  console.log("STATUS TEXT:", res.statusText);
+  console.log("OK:", res.ok);
+  console.log("RESPONSE:", responseText);
+  console.log("=========================================");
+
   if (!res.ok) {
-    throw new Error("Recommendation failed.");
+    throw new Error(
+      `Recommendation API failed: ${res.status} ${res.statusText} - ${responseText}`
+    );
   }
 
-  return res.json();
+  try {
+    return JSON.parse(responseText);
+  } catch (error) {
+    console.error("Invalid JSON from /api/recommend:", responseText);
+    throw new Error("Recommendation API returned invalid JSON.");
+  }
 }

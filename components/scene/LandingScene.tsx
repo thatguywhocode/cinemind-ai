@@ -3,22 +3,30 @@
 import Navbar from "@/components/landing/Navbar";
 import OpeningScene from "@/components/landing/OpeningScene";
 import TrendingMovies from "@/components/landing/TrendingMovies";
+import CinemaCurtains from "@/components/scene/CinemaCurtains";
+import FilmGrain from "@/components/scene/FilmGrain";
 
 export default function LandingScene() {
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-[#090A0D] text-white">
-      {/* Fixed Navbar */}
+    <div className="relative min-h-screen w-full overflow-x-hidden bg-[#090a0d]">
+      {/* Cinematic film grain */}
+      <FilmGrain />
+
+      {/* Opening theater curtains */}
+      <CinemaCurtains />
+
+      {/* Navigation */}
       <Navbar />
 
-      {/* Main Content */}
-      <main className="w-full">
-        {/* Hero Section */}
-        <section className="w-full">
+      {/* Main content */}
+      <main className="relative z-10 w-full">
+        {/* Hero */}
+        <section className="relative min-h-screen w-full">
           <OpeningScene />
         </section>
 
-        {/* Trending Section */}
-        <section className="w-full">
+        {/* Trending movies */}
+        <section className="relative w-full">
           <TrendingMovies />
         </section>
       </main>
